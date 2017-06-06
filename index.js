@@ -10,6 +10,14 @@ var duplexer = require('duplexer')
 var concat   = require('concat-stream')
 var chpro    = require('child_process')
 
+var newProcess
+
+if (typeof process.versions['electron'] === 'undefined') {
+  newProcess = chpro.spawn
+} else {
+  newProcess = chpro.fork
+}
+
 module.exports = function (options) {
 
   var read = through()
@@ -28,7 +36,7 @@ module.exports = function (options) {
 
   var write = fs.createWriteStream(filename)
     .on('close', function () {
-      var child = chpro.fork(require.resolve('j/bin/j.njs'), spawnArgs, {silent: true})
+      var child = newProcess(require.resolve('j/bin/j.njs'), spawnArgs, {silent: true})
       child.stdout.pipe(csv.createStream(options))
         .pipe(through(function (data) {
           var _data = {}
