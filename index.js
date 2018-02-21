@@ -3,20 +3,16 @@
 var fs       = require('fs')
 var os       = require('os')
 var path     = require('path')
+var chpro    = require('child_process')
+
 var through  = require('through')
 var csv      = require('csv-stream')
 var osenv    = require('osenv')
 var duplexer = require('duplexer')
 var concat   = require('concat-stream')
-var chpro    = require('child_process')
 
-var newProcess
-
-if (typeof process.versions['electron'] === 'undefined') {
-  newProcess = chpro.spawn
-} else {
-  newProcess = chpro.fork
-}
+var spawn = chpro.spawn
+if (os.type() === 'Windows_NT') spawn = require('win-spawn')
 
 module.exports = function (options) {
 
@@ -36,7 +32,7 @@ module.exports = function (options) {
 
   var write = fs.createWriteStream(filename)
     .on('close', function () {
-      var child = newProcess(require.resolve('j/bin/j.njs'), spawnArgs, {silent: true})
+      var child = spawn(require.resolve('j/bin/j.njs'), spawnArgs)
       child.stdout.pipe(csv.createStream(options))
         .pipe(through(function (data) {
           var _data = {}
