@@ -31,7 +31,7 @@ fs.createReadStream('accounts.xlsx')
 
 # stream options
 
-The `options` object may have the same properties as [csv-stream](https://www.npmjs.com/package/csv-stream) and these two additional properties:
+The `options` object may have the same properties as [fast-csv](https://github.com/C2FO/fast-csv) and these two additional properties:
 
  * `sheet`: the name of the sheet you want to stream. Case sensitive.
  * `sheetIndex`: the sheet number you want to stream (0-based).
