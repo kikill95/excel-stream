@@ -1,25 +1,21 @@
 #!/usr/bin/env node
 
 var fs       = require('fs')
-var os       = require('os')
 var path     = require('path')
-var chpro    = require('child_process')
+var spawn    = require('cross-spawn')
 
 var through  = require('through')
-var csv      = require('csv-stream')
-var osenv    = require('osenv')
+var csv      = require('fast-csv')
+var tmp      = require('tmp')
 var duplexer = require('duplexer')
 var concat   = require('concat-stream')
-
-var spawn = chpro.spawn
-if (os.type() === 'Windows_NT') spawn = require('win-spawn')
 
 module.exports = function (options) {
 
   var read = through()
   var duplex
 
-  var filename = path.join(osenv.tmpdir(), '_'+Date.now())
+  var filename = tmp.tmpNameSync()
 
   var spawnArgs = []
 
@@ -33,7 +29,7 @@ module.exports = function (options) {
   var write = fs.createWriteStream(filename)
     .on('close', function () {
       var child = spawn(require.resolve('j/bin/j.njs'), spawnArgs)
-      child.stdout.pipe(csv.createStream(options))
+      child.stdout.pipe(csv(options))
         .pipe(through(function (data) {
           var _data = {}
           for(var k in data) {
