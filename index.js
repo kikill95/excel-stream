@@ -2,7 +2,7 @@
 
 var fs       = require('fs')
 var path     = require('path')
-var spawn    = require('cross-spawn')
+var fork     = require('child_process').fork
 
 var through  = require('through')
 var csv      = require('fast-csv')
@@ -17,19 +17,20 @@ module.exports = function (options) {
 
   var filename = tmp.tmpNameSync()
 
-  var spawnArgs = []
+  var forkArgs = []
 
   if (options) {
-    options.sheet && spawnArgs.push('--sheet') && spawnArgs.push(options.sheet) && delete options.sheet
-    options.sheetIndex && spawnArgs.push('--sheet-index') && spawnArgs.push(options.sheetIndex) && delete options.sheetIndex
+    options.sheet && forkArgs.push('--sheet') && forkArgs.push(options.sheet) && delete options.sheet
+    options.sheetIndex && forkArgs.push('--sheet-index') && forkArgs.push(options.sheetIndex) && delete options.sheetIndex
   }
 
-  spawnArgs.push(filename)
+  forkArgs.push(filename)
 
   var write = fs.createWriteStream(filename)
     .on('close', function () {
-      var child = spawn(require.resolve('j/bin/j.njs'), spawnArgs)
-      child.stdout.pipe(csv(options))
+      var child = fork(require.resolve('j/bin/j.njs'), forkArgs)
+      child.stdout
+        .pipe(csv(options))
         .pipe(through(function (data) {
           var _data = {}
           for(var k in data) {
