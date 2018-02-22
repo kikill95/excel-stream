@@ -28,7 +28,7 @@ module.exports = function (options) {
 
   var write = fs.createWriteStream(filename)
     .on('close', function () {
-      var child = fork(require.resolve('j/bin/j.njs'), forkArgs)
+      var child = fork(require.resolve('j/bin/j.njs'), forkArgs, {silent: true})
       child.stdout
         .pipe(csv(options))
         .pipe(through(function (data) {
