@@ -2,6 +2,7 @@
 
 A stream that converts excel spreadsheets into JSON object arrays.
 
+Forked from [dominictarr/excel-stream](https://github.com/dominictarr/excel-stream)
 
 # Examples
 
