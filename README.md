@@ -1,4 +1,4 @@
-# excel-stream
+# ek-excel-stream
 
 A stream that converts excel spreadsheets into JSON object arrays.
 
@@ -8,7 +8,7 @@ Forked from [dominictarr/excel-stream](https://github.com/dominictarr/excel-stre
 
 ``` js
 // stream rows from the first sheet on the file
-var excel = require('excel-stream')
+var excel = require('ek-excel-stream')
 var fs = require('fs')
 
 fs.createReadStream('accounts.xlsx')
@@ -19,7 +19,7 @@ fs.createReadStream('accounts.xlsx')
 
 ``` js
 // stream rows from the sheet named 'Your sheet name'
-var excel = require('excel-stream')
+var excel = require('ek-excel-stream')
 var fs = require('fs')
 
 fs.createReadStream('accounts.xlsx')
@@ -40,8 +40,8 @@ The `options` object may have the same properties as [fast-csv](https://github.c
 # Usage
 
 ``` js
-npm install -g excel-stream
-excel-stream < accounts.xlsx > account.json
+npm install -g ek-excel-stream
+ek-excel-stream < accounts.xlsx > account.json
 ```
 
 # options
@@ -49,7 +49,7 @@ excel-stream < accounts.xlsx > account.json
 newline delimited json:
 
 ```js
-excel-stream --newlines
+ek-excel-stream --newlines
 ```
 
 # formats
