@@ -10,7 +10,7 @@ var tmp      = require('tmp')
 var duplexer = require('duplexer')
 var concat   = require('concat-stream')
 
-module.exports = function (options) {
+module.exports = function (options, transform) {
 
   var read = through()
   var duplex
@@ -30,7 +30,7 @@ module.exports = function (options) {
     .on('close', function () {
       var child = fork(require.resolve('j/bin/j.njs'), forkArgs, {silent: true})
       child.stdout
-        .pipe(csv(options))
+        .pipe(transform ? csv(options).transform(transform) : csv(options))
         .pipe(through(function (data) {
           var _data = {}
           for(var k in data) {
